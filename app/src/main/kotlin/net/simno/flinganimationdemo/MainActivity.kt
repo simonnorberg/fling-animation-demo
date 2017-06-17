@@ -1,5 +1,6 @@
 package net.simno.flinganimationdemo
 
+import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
@@ -64,10 +65,15 @@ class MainActivity : AppCompatActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     if (item?.itemId == R.id.menu_source) {
-      CustomTabsIntent.Builder()
+      val tabsIntent = CustomTabsIntent.Builder()
           .setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
           .build()
-          .launchUrl(this, Uri.parse("https://github.com/simonnorberg/fling-animation-demo"))
+
+      val url = Uri.parse("https://github.com/simonnorberg/fling-animation-demo")
+
+      if (tabsIntent.isAvailable(url)) {
+        tabsIntent.launchUrl(this, url)
+      }
       return true
     }
     return super.onOptionsItemSelected(item)
@@ -114,5 +120,10 @@ class MainActivity : AppCompatActivity() {
     disposables?.dispose()
   }
 
-  fun CircleView.positions(): Observable<PointF> = CircleViewObservable(this)
+  private fun CustomTabsIntent.isAvailable(url: Uri): Boolean {
+    this.intent.data = url
+    return packageManager.queryIntentActivities(this.intent, MATCH_DEFAULT_ONLY).size > 0
+  }
+
+  private fun CircleView.positions(): Observable<PointF> = CircleViewObservable(this)
 }
