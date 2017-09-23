@@ -1,16 +1,17 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.oss.licenses.plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
   compileSdkVersion 26
-  buildToolsVersion "26.0.0"
+  buildToolsVersion "26.0.1"
   defaultConfig {
     applicationId "net.simno.flinganimationdemo"
     minSdkVersion 16
     targetSdkVersion 26
-    versionCode 10
-    versionName "1.0"
+    versionCode 12
+    versionName "1.2"
   }
   sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
@@ -27,7 +28,9 @@ dependencies {
   compile "com.android.support:customtabs:$support_version"
   compile "com.android.support:support-dynamic-animation:$support_version"
 
+  compile 'com.google.android.gms:play-services-oss-licenses:11.4.0'
+
   compile 'com.jakewharton.rxbinding2:rxbinding-kotlin:2.0.0'
   compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-  compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+  compile 'io.reactivex.rxjava2:rxjava:2.1.4'
 }

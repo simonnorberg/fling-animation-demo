@@ -1,5 +1,6 @@
 package net.simno.flinganimationdemo
 
+import android.content.Intent
 import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.graphics.PointF
 import android.net.Uri
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.jakewharton.rxbinding2.view.globalLayouts
 import com.jakewharton.rxbinding2.widget.changes
 import io.reactivex.Observable
@@ -24,11 +26,10 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
-  private val TAG = "MainActivity"
-  private val POSITION = "position"
-
+  private val tag = "MainActivity"
+  private val positionKey = "position"
   private var disposables: CompositeDisposable? = null
-  var position = PointF(0.5f, 0.5f)
+  private var position = PointF(0.5f, 0.5f)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -38,14 +39,14 @@ class MainActivity : AppCompatActivity() {
 
   override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
     super.onRestoreInstanceState(savedInstanceState)
-    if (savedInstanceState != null && savedInstanceState.containsKey(POSITION)) {
-      position = savedInstanceState.getParcelable<PointF>(POSITION)
+    if (savedInstanceState != null && savedInstanceState.containsKey(positionKey)) {
+      position = savedInstanceState.getParcelable(positionKey)
     }
   }
 
   override fun onSaveInstanceState(outState: Bundle?) {
     super.onSaveInstanceState(outState)
-    outState?.putParcelable(POSITION, position)
+    outState?.putParcelable(positionKey, position)
   }
 
   override fun onStart() {
@@ -75,6 +76,9 @@ class MainActivity : AppCompatActivity() {
         tabsIntent.launchUrl(this, url)
       }
       return true
+    } else if (item?.itemId == R.id.menu_licenses) {
+      startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+      return true
     }
     return super.onOptionsItemSelected(item)
   }
@@ -92,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
           circleView.friction = friction
         }, { error ->
-          Log.e(TAG, error.message, error)
+          Log.e(tag, error.message, error)
         }))
 
     disposables?.add(circleView.positions()
@@ -103,7 +107,7 @@ class MainActivity : AppCompatActivity() {
           xText.text = getString(R.string.x, String.format(Locale.US, "%.02f", position.x))
           yText.text = getString(R.string.y, String.format(Locale.US, "%.02f", position.y))
         }, { error ->
-          Log.e(TAG, error.message, error)
+          Log.e(tag, error.message, error)
         }))
 
     disposables?.add(circleView.globalLayouts()
@@ -112,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         .subscribe({
           circleView.setPosition(position)
         }, { error ->
-          Log.e(TAG, error.message, error)
+          Log.e(tag, error.message, error)
         }))
   }
 

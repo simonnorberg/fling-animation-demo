@@ -17,7 +17,7 @@ class CircleViewObservable(private val view: CircleView) : Observable<PointF>() 
     view.onPositionChangedListener = listener
   }
 
-  internal class Listener(val view: CircleView, val observer: Observer<in PointF>)
+  internal class Listener(private val view: CircleView, private val observer: Observer<in PointF>)
     : MainThreadDisposable(), CircleView.OnPositionChangedListener {
 
     override fun onPositionChanged(point: PointF) {
