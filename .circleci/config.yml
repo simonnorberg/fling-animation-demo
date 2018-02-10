@@ -1,0 +1,31 @@
+version: 2
+references:
+  container_config: &container_config
+    docker:
+      - image: circleci/android:api-27-alpha
+
+    working_directory: ~/code
+
+    environment:
+      JVM_OPTS: "-Xmx3200m"
+      TERM: dumb
+
+  cache_key: &cache_key
+      key: key-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+
+jobs:
+  build:
+    <<: *container_config
+    steps:
+      - checkout
+
+      - restore_cache:
+          <<: *cache_key
+      - run: ./gradlew app:dependencies
+      - run: ./gradlew check assembleDebug
+      - run: ./gradlew dependencyUpdates
+      - run: ./gradlew spotlessCheck
+      - save_cache:
+          <<: *cache_key
+          paths:
+            - ~/.gradle

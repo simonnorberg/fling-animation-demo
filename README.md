@@ -1,4 +1,4 @@
-FlingAnimation Demo [![Build Status](https://travis-ci.org/simonnorberg/fling-animation-demo.svg?branch=master)](https://travis-ci.org/simonnorberg/fling-animation-demo)
+FlingAnimation Demo [![CircleCI](https://circleci.com/gh/simonnorberg/fling-animation-demo.svg?style=svg)](https://circleci.com/gh/simonnorberg/fling-animation-demo)
 ===================
 
 Demo of using the Android FlingAnimation API together with velocity tracking in a custom view.
