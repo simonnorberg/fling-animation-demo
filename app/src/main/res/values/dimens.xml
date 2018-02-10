@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="circle_stroke_width">4dp</dimen>
-  <dimen name="circle_radius">16dp</dimen>
-  <dimen name="text_size">18sp</dimen>
+    <dimen name="circle_stroke_width">4dp</dimen>
+    <dimen name="circle_radius">16dp</dimen>
+    <dimen name="text_size">18sp</dimen>
 </resources>

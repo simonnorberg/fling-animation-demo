@@ -1,24 +1,54 @@
 buildscript {
-  ext.kotlin_version = '1.1.50'
-  ext.support_version = '26.1.0'
-  repositories {
-    google()
-    jcenter()
-  }
-  dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.3'
-    classpath 'com.google.gms:oss-licenses:0.9.0'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-  }
+    ext.versions = [
+            'kotlin'       : '1.2.21',
+            'compile_sdk'  : 27,
+            'target_sdk'   : 27,
+            'min_sdk'      : 16,
+            'support'      : '27.0.2',
+            'play_services': '11.8.0',
+            'ktlint'       : '0.14.0',
+            'ktx'          : '0.1',
+            'rxandroid'    : '2.0.1',
+            'rxbinding'    : '2.1.0',
+            'rxjava'       : '2.1.9',
+            'rxkotlin'     : '2.2.0',
+            'rxlint'       : '1.6'
+    ]
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.google.gms:oss-licenses:0.9.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$versions.kotlin"
+    }
+}
+
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.9.0"
+    id 'com.github.ben-manes.versions' version "0.17.0"
 }
 
 allprojects {
-  repositories {
-    google()
-    jcenter()
-  }
+    repositories {
+        google()
+        jcenter()
+    }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
 }
 
-task clean(type: Delete) {
-  delete rootProject.buildDir
+subprojects {
+    apply plugin: 'com.diffplug.gradle.spotless'
+    spotless {
+        kotlin {
+            target "**/*.kt"
+            ktlint(versions.ktlint)
+        }
+    }
 }
