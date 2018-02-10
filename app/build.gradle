@@ -9,7 +9,7 @@ android {
         applicationId "net.simno.flinganimationdemo"
         minSdkVersion versions.min_sdk
         targetSdkVersion versions.target_sdk
-        versionCode 13
+        versionCode 14
         versionName "1.3"
     }
     lintOptions {
