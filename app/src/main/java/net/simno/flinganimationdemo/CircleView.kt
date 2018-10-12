@@ -6,9 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
-import android.support.animation.DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS
-import android.support.animation.FlingAnimation
-import android.support.animation.FloatValueHolder
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_CANCEL
@@ -17,13 +14,15 @@ import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
 import android.view.VelocityTracker
 import android.view.View
+import androidx.dynamicanimation.animation.DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS
+import androidx.dynamicanimation.animation.FlingAnimation
+import androidx.dynamicanimation.animation.FloatValueHolder
 
 class CircleView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     private val circleRadius = resources.getDimension(R.dimen.circle_radius)
     private val circleStrokeWidth = resources.getDimension(R.dimen.circle_stroke_width)
     private val minPos = circleRadius + circleStrokeWidth / 2f
@@ -108,40 +107,40 @@ class CircleView @JvmOverloads constructor(
 
     private fun startXFlingAnimation() {
         xFling = FlingAnimation(FloatValueHolder(circleX))
-                .setStartVelocity(xVelocity)
-                .setMaxValue(width - minPos)
-                .setMinValue(minPos)
-                .setMinimumVisibleChange(MIN_VISIBLE_CHANGE_PIXELS)
-                .setFriction(friction)
-                .apply {
-                    addUpdateListener({ _, newX, _ -> setCirclePosition(newX, circleY) })
-                    addEndListener({ _, canceled, _, velocity ->
-                        if (!canceled && Math.abs(velocity) > 0) {
-                            xVelocity = -velocity
-                            startXFlingAnimation()
-                        }
-                    })
-                    start()
+            .setStartVelocity(xVelocity)
+            .setMaxValue(width - minPos)
+            .setMinValue(minPos)
+            .setMinimumVisibleChange(MIN_VISIBLE_CHANGE_PIXELS)
+            .setFriction(friction)
+            .apply {
+                addUpdateListener { _, newX, _ -> setCirclePosition(newX, circleY) }
+                addEndListener { _, canceled, _, velocity ->
+                    if (!canceled && Math.abs(velocity) > 0) {
+                        xVelocity = -velocity
+                        startXFlingAnimation()
+                    }
                 }
+                start()
+            }
     }
 
     private fun startYFlingAnimation() {
         yFling = FlingAnimation(FloatValueHolder(circleY))
-                .setStartVelocity(yVelocity)
-                .setMaxValue(height - minPos)
-                .setMinValue(minPos)
-                .setMinimumVisibleChange(MIN_VISIBLE_CHANGE_PIXELS)
-                .setFriction(friction)
-                .apply {
-                    addUpdateListener({ _, newY, _ -> setCirclePosition(circleX, newY) })
-                    addEndListener({ _, canceled, _, velocity ->
-                        if (!canceled && Math.abs(velocity) > 0) {
-                            yVelocity = -velocity
-                            startYFlingAnimation()
-                        }
-                    })
-                    start()
+            .setStartVelocity(yVelocity)
+            .setMaxValue(height - minPos)
+            .setMinValue(minPos)
+            .setMinimumVisibleChange(MIN_VISIBLE_CHANGE_PIXELS)
+            .setFriction(friction)
+            .apply {
+                addUpdateListener { _, newY, _ -> setCirclePosition(circleX, newY) }
+                addEndListener { _, canceled, _, velocity ->
+                    if (!canceled && Math.abs(velocity) > 0) {
+                        yVelocity = -velocity
+                        startYFlingAnimation()
+                    }
                 }
+                start()
+            }
     }
 
     private fun setCirclePosition(newX: Float, newY: Float) {
@@ -163,10 +162,10 @@ class CircleView @JvmOverloads constructor(
     }
 
     private fun getValidPx(px: Float, min: Float, max: Float): Float =
-            if (px < min) min else if (px > max) max else px
+        if (px < min) min else if (px > max) max else px
 
     private fun pxToPos(px: Float, max: Float): Float =
-            if (px > 0) px / max else px
+        if (px > 0) px / max else px
 
     interface OnPositionChangedListener {
         fun onPositionChanged(point: PointF)

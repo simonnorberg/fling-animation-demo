@@ -5,11 +5,11 @@
     <item
         android:id="@+id/menu_source"
         android:title="@string/menu_source"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_licenses"
         android:title="@string/menu_licenses"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
 </menu>

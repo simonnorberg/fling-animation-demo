@@ -15,19 +15,19 @@
         <TextView
             android:id="@+id/xText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/yText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
 
         <TextView
             android:id="@+id/frictionText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -35,14 +35,14 @@
         android:id="@+id/frictionSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
         android:layout_marginTop="32dp"
-        android:max="30"/>
+        android:layout_marginBottom="32dp"
+        android:max="30" />
 
     <net.simno.flinganimationdemo.CircleView
         android:id="@+id/circleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"/>
+        android:background="@color/colorAccent" />
 
 </LinearLayout>

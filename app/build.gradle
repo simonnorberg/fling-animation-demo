@@ -15,16 +15,19 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$versions.kotlin"
-    implementation "androidx.core:core-ktx:$versions.ktx"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
+    implementation "androidx.core:core-ktx:$versions.androidx"
 
-    implementation "com.android.support:appcompat-v7:$versions.support"
-    implementation "com.android.support:customtabs:$versions.support"
-    implementation "com.android.support:support-dynamic-animation:$versions.support"
-    implementation "com.android.support:support-v4:$versions.support"
+    implementation "androidx.appcompat:appcompat:$versions.androidx"
+    implementation "androidx.browser:browser:$versions.androidx"
+    implementation "androidx.dynamicanimation:dynamicanimation:$versions.androidx"
 
     implementation "com.google.android.gms:play-services-oss-licenses:$versions.play_services"
 

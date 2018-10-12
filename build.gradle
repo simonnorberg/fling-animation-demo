@@ -1,34 +1,33 @@
 buildscript {
     ext.versions = [
-            'kotlin'       : '1.2.21',
-            'compile_sdk'  : 27,
-            'target_sdk'   : 27,
+            'kotlin'       : '1.2.71',
+            'compile_sdk'  : 28,
+            'target_sdk'   : 28,
             'min_sdk'      : 16,
-            'support'      : '27.0.2',
-            'play_services': '11.8.0',
-            'ktlint'       : '0.14.0',
-            'ktx'          : '0.1',
-            'rxandroid'    : '2.0.1',
-            'rxbinding'    : '2.1.0',
-            'rxjava'       : '2.1.9',
-            'rxkotlin'     : '2.2.0',
-            'rxlint'       : '1.6'
+            'androidx'     : '1.0.0',
+            'play_services': '16.0.1',
+            'ktlint'       : '0.29.0',
+            'rxandroid'    : '2.1.0',
+            'rxbinding'    : '2.2.0',
+            'rxjava'       : '2.2.2',
+            'rxkotlin'     : '2.3.0',
+            'rxlint'       : '1.6.1'
     ]
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'com.google.gms:oss-licenses:0.9.1'
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.google.gms:oss-licenses:0.9.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$versions.kotlin"
     }
 }
 
 plugins {
-    id "com.diffplug.gradle.spotless" version "3.9.0"
-    id 'com.github.ben-manes.versions' version "0.17.0"
+    id "com.diffplug.gradle.spotless" version "3.15.0"
+    id 'com.github.ben-manes.versions' version "0.20.0"
 }
 
 allprojects {

@@ -5,13 +5,13 @@ import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.net.toUri
+import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.jakewharton.rxbinding2.view.globalLayouts
 import com.jakewharton.rxbinding2.widget.changes
@@ -29,7 +29,6 @@ import net.simno.flinganimationdemo.CircleView.Companion.MAX_FRICTION
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
-
     private val main: Scheduler = AndroidSchedulers.mainThread()
     private val onError: (Throwable) -> Unit = { Log.e(TAG, it.message, it) }
     private var disposables: CompositeDisposable? = null
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         savedInstanceState?.let {
             if (it.containsKey(POSITION_KEY)) {
-                position = it.getParcelable(POSITION_KEY)
+                position = it.getParcelable(POSITION_KEY) ?: position
             }
         }
     }
@@ -57,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        disposables = observeUi()
+        disposables = observeViews()
     }
 
     override fun onStop() {
@@ -75,13 +74,13 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_source -> {
                 val url = "https://github.com/simonnorberg/fling-animation-demo".toUri()
                 CustomTabsIntent.Builder()
-                        .setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                        .build()
-                        .apply {
-                            if (isAvailable(url)) {
-                                launchUrl(this@MainActivity, url)
-                            }
+                    .setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    .build()
+                    .apply {
+                        if (isAvailable(url)) {
+                            launchUrl(this@MainActivity, url)
                         }
+                    }
                 true
             }
             R.id.menu_licenses -> {
@@ -92,36 +91,36 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeUi(): CompositeDisposable {
+    private fun observeViews(): CompositeDisposable {
         val disposables = CompositeDisposable()
 
         disposables += frictionSeekBar.changes()
-                .applySchedulers()
-                .subscribe({ progress ->
-                    val friction = progress.toFriction()
-                    frictionText.text = friction.frictionText()
-                    circleView.friction = friction
-                }, onError)
+            .applySchedulers()
+            .subscribe({ progress ->
+                val friction = progress.toFriction()
+                frictionText.text = friction.frictionText()
+                circleView.friction = friction
+            }, onError)
 
         disposables += circleView.positions()
-                .applySchedulers()
-                .subscribe({ position ->
-                    this@MainActivity.position = position
-                    xText.text = getPositionText(R.string.x, position.x)
-                    yText.text = getPositionText(R.string.y, position.y)
-                }, onError)
+            .applySchedulers()
+            .subscribe({ position ->
+                this@MainActivity.position = position
+                xText.text = getPositionText(R.string.x, position.x)
+                yText.text = getPositionText(R.string.y, position.y)
+            }, onError)
 
         disposables += circleView.globalLayouts()
-                .applySchedulers()
-                .subscribe({
-                    circleView.setPosition(position)
-                }, onError)
+            .applySchedulers()
+            .subscribe({
+                circleView.setPosition(position)
+            }, onError)
 
         return disposables
     }
 
     private fun <T> Observable<T>.applySchedulers(): Observable<T> =
-            subscribeOn(main).observeOn(main)
+        subscribeOn(main).observeOn(main)
 
     private fun CustomTabsIntent.isAvailable(url: Uri): Boolean {
         this.intent.data = url
@@ -132,11 +131,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun Int.toFriction(): Float = if (this >= 30) MAX_FRICTION else (this + 1) / 10f
 
-    private fun Float.frictionText(): String =
-            getString(R.string.friction, if (this == MAX_FRICTION) "MAX" else this.toString())
+    private fun Float.frictionText() =
+        getString(R.string.friction, if (this == MAX_FRICTION) "MAX" else this.toString())
 
     private fun getPositionText(resId: Int, value: Float) =
-            getString(resId, String.format(Locale.US, "%.02f", value))
+        getString(resId, String.format(Locale.US, "%.02f", value))
 
     companion object {
         private const val POSITION_KEY = "position"
