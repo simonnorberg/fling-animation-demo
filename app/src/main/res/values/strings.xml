@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FlingAnimation Demo</string>
-    <string name="friction">Friction: %1$s</string>
-    <string name="x">X: %1$s</string>
-    <string name="y">Y: %1$s</string>
+    <string name="x">X:</string>
+    <string name="y">Y:</string>
+    <string name="friction">Friction:</string>
     <string name="menu_source">Source code</string>
     <string name="menu_licenses">Open source licenses</string>
 </resources>

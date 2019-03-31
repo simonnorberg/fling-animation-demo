@@ -3,7 +3,6 @@ package net.simno.flinganimationdemo
 import android.content.Intent
 import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.graphics.PointF
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -13,23 +12,18 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import com.jakewharton.rxbinding2.view.globalLayouts
-import com.jakewharton.rxbinding2.widget.changes
-import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.jakewharton.rxbinding3.widget.changes
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.activity_main.circleView
 import kotlinx.android.synthetic.main.activity_main.frictionSeekBar
-import kotlinx.android.synthetic.main.activity_main.frictionText
-import kotlinx.android.synthetic.main.activity_main.xText
-import kotlinx.android.synthetic.main.activity_main.yText
+import kotlinx.android.synthetic.main.activity_main.frictionValue
+import kotlinx.android.synthetic.main.activity_main.xValue
+import kotlinx.android.synthetic.main.activity_main.yValue
 import net.simno.flinganimationdemo.CircleView.Companion.MAX_FRICTION
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
-    private val main: Scheduler = AndroidSchedulers.mainThread()
     private val onError: (Throwable) -> Unit = { Log.e(TAG, it.message, it) }
     private var disposables: CompositeDisposable? = null
     private var position = PointF(0.5f, 0.5f)
@@ -37,21 +31,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        frictionSeekBar.progress = 9
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState?.let {
-            if (it.containsKey(POSITION_KEY)) {
-                position = it.getParcelable(POSITION_KEY) ?: position
-            }
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        outState?.putParcelable(POSITION_KEY, position)
     }
 
     override fun onStart() {
@@ -61,7 +40,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        disposables?.dispose()
+        disposables?.clear()
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState?.let {
+            if (it.containsKey(POSITION_KEY)) {
+                position = it.getParcelable(POSITION_KEY) ?: position
+                circleView.setPosition(position)
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(POSITION_KEY, position)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -72,15 +66,13 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.menu_source -> {
-                val url = "https://github.com/simonnorberg/fling-animation-demo".toUri()
-                CustomTabsIntent.Builder()
+                val customTabs = CustomTabsIntent.Builder()
                     .setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
                     .build()
-                    .apply {
-                        if (isAvailable(url)) {
-                            launchUrl(this@MainActivity, url)
-                        }
-                    }
+                customTabs.intent.data = url
+                if (packageManager.resolveActivity(customTabs.intent, MATCH_DEFAULT_ONLY) != null) {
+                    customTabs.launchUrl(this, url)
+                }
                 true
             }
             R.id.menu_licenses -> {
@@ -95,50 +87,26 @@ class MainActivity : AppCompatActivity() {
         val disposables = CompositeDisposable()
 
         disposables += frictionSeekBar.changes()
-            .applySchedulers()
-            .subscribe({ progress ->
-                val friction = progress.toFriction()
-                frictionText.text = friction.frictionText()
-                circleView.friction = friction
-            }, onError)
+            .map { if (it >= 30) MAX_FRICTION else (it + 1) / 10f }
+            .doOnNext { circleView.friction = it }
+            .map { if (it == MAX_FRICTION) "∞" else it.toString() }
+            .subscribe({ frictionValue.text = it }, onError)
 
         disposables += circleView.positions()
-            .applySchedulers()
-            .subscribe({ position ->
-                this@MainActivity.position = position
-                xText.text = getPositionText(R.string.x, position.x)
-                yText.text = getPositionText(R.string.y, position.y)
-            }, onError)
-
-        disposables += circleView.globalLayouts()
-            .applySchedulers()
             .subscribe({
-                circleView.setPosition(position)
+                position = it
+                xValue.text = it.x.format()
+                yValue.text = it.y.format()
             }, onError)
 
         return disposables
     }
 
-    private fun <T> Observable<T>.applySchedulers(): Observable<T> =
-        subscribeOn(main).observeOn(main)
-
-    private fun CustomTabsIntent.isAvailable(url: Uri): Boolean {
-        this.intent.data = url
-        return packageManager.queryIntentActivities(this.intent, MATCH_DEFAULT_ONLY).size > 0
-    }
-
-    private fun CircleView.positions(): Observable<PointF> = CircleViewObservable(this)
-
-    private fun Int.toFriction(): Float = if (this >= 30) MAX_FRICTION else (this + 1) / 10f
-
-    private fun Float.frictionText() =
-        getString(R.string.friction, if (this == MAX_FRICTION) "MAX" else this.toString())
-
-    private fun getPositionText(resId: Int, value: Float) =
-        getString(resId, String.format(Locale.US, "%.02f", value))
+    private fun Float.format() = String.format(Locale.US, "%.02f", this)
 
     companion object {
         private const val POSITION_KEY = "position"
         private const val TAG = "MainActivity"
+        private val url = "https://github.com/simonnorberg/fling-animation-demo".toUri()
     }
 }
