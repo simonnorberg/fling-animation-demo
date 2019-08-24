@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.jakewharton.rxbinding3.widget.changes
@@ -43,13 +42,11 @@ class MainActivity : AppCompatActivity() {
         disposables?.clear()
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState?.let {
-            if (it.containsKey(POSITION_KEY)) {
-                position = it.getParcelable(POSITION_KEY) ?: position
-                circleView.setPosition(position)
-            }
+        if (savedInstanceState.containsKey(POSITION_KEY)) {
+            position = savedInstanceState.getParcelable(POSITION_KEY) ?: position
+            circleView.setPosition(position)
         }
     }
 
@@ -63,12 +60,10 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             R.id.menu_source -> {
-                val customTabs = CustomTabsIntent.Builder()
-                    .setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                    .build()
+                val customTabs = CustomTabsIntent.Builder().build()
                 customTabs.intent.data = url
                 if (packageManager.resolveActivity(customTabs.intent, MATCH_DEFAULT_ONLY) != null) {
                     customTabs.launchUrl(this, url)

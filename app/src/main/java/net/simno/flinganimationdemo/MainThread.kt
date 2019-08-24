@@ -1,15 +1,16 @@
 package net.simno.flinganimationdemo
 
-import android.os.Looper
 import io.reactivex.Observer
+import io.reactivex.android.MainThreadDisposable
 import io.reactivex.disposables.Disposables
 
-fun checkMainThread(observer: Observer<*>): Boolean {
-    if (Looper.myLooper() != Looper.getMainLooper()) {
+fun verifyMainThread(observer: Observer<*>): Boolean {
+    return try {
+        MainThreadDisposable.verifyMainThread()
+        true
+    } catch (error: IllegalStateException) {
         observer.onSubscribe(Disposables.empty())
-        observer.onError(IllegalStateException(
-            "Expected to be called on the main thread but was " + Thread.currentThread().name))
-        return false
+        observer.onError(error)
+        false
     }
-    return true
 }

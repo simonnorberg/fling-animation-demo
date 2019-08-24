@@ -3,13 +3,13 @@ package net.simno.flinganimationdemo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationEndListener
 import androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationUpdateListener
@@ -49,7 +49,7 @@ class CircleView @JvmOverloads constructor(
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        color = Color.WHITE
+        color = ContextCompat.getColor(context, R.color.colorAccent)
         strokeWidth = circleStrokeWidth
     }
 

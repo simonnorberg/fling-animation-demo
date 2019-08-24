@@ -16,7 +16,7 @@ private class CircleViewObservable(
 ) : Observable<PointF>() {
 
     override fun subscribeActual(observer: Observer<in PointF>) {
-        if (!checkMainThread(observer)) {
+        if (!verifyMainThread(observer)) {
             return
         }
         val listener = Listener(view, observer)

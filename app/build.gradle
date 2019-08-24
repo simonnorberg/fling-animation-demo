@@ -7,17 +7,19 @@ apply plugin: 'com.github.triplet.play'
 play {
     track = 'internal'
     resolutionStrategy = 'ignore'
+    defaultToAppBundles = true
     serviceAccountCredentials = rootProject.file('signing/play-account.json')
 }
 
 android {
     compileSdkVersion versions.compile_sdk
+    buildToolsVersion versions.build_tools
     defaultConfig {
         applicationId 'net.simno.flinganimationdemo'
         minSdkVersion versions.min_sdk
         targetSdkVersion versions.target_sdk
-        versionCode 21
-        versionName '1.4'
+        versionCode 22
+        versionName '1.5'
     }
     signingConfigs {
         release {
