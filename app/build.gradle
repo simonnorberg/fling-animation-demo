@@ -18,8 +18,8 @@ android {
         applicationId 'net.simno.flinganimationdemo'
         minSdkVersion versions.min_sdk
         targetSdkVersion versions.target_sdk
-        versionCode 22
-        versionName '1.5'
+        versionCode 23
+        versionName '1.6'
     }
     signingConfigs {
         release {
@@ -67,4 +67,5 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$versions.rxjava"
     implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxkotlin"
     debugImplementation "nl.littlerobots.rxlint:rxlint:$versions.rxlint"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$versions.leakcanary"
 }

@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationEndListener
 import androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationUpdateListener
@@ -30,13 +31,13 @@ class CircleView @JvmOverloads constructor(
         updatePosition(circleX, newY)
     }
     private val xAnimationEnd = OnAnimationEndListener { _, canceled, _, velocity ->
-        if (!canceled && velocity.absoluteValue > 0) {
+        if (!canceled && velocity.absoluteValue > 0 && ViewCompat.isAttachedToWindow(this)) {
             xVelocity = -velocity
             startXAnimation()
         }
     }
     private val yAnimationEnd = OnAnimationEndListener { _, canceled, _, velocity ->
-        if (!canceled && velocity.absoluteValue > 0) {
+        if (!canceled && velocity.absoluteValue > 0 && ViewCompat.isAttachedToWindow(this)) {
             yVelocity = -velocity
             startYAnimation()
         }
@@ -70,6 +71,11 @@ class CircleView @JvmOverloads constructor(
     private var xFling: FlingAnimation? = null
     private var yFling: FlingAnimation? = null
     private var lastSetPosition: PointF = PointF(0.5f, 0.5f)
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        stopAnimations()
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         if (w != oldw || h != oldh) {

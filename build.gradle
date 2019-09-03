@@ -15,9 +15,10 @@ buildscript {
             'play_services': '17.0.0',
             'ktlint'       : '0.33.0',
             'rxbinding'    : '3.0.0',
-            'rxjava'       : '2.2.11',
+            'rxjava'       : '2.2.12',
             'rxkotlin'     : '2.4.0',
-            'rxlint'       : '1.7.4'
+            'rxlint'       : '1.7.4',
+            'leakcanary'   : '2.0-beta-3'
     ]
     repositories {
         google()
@@ -34,7 +35,7 @@ buildscript {
 
 plugins {
     id 'com.diffplug.gradle.spotless' version '3.24.2'
-    id 'com.github.ben-manes.versions' version '0.22.0'
+    id 'com.github.ben-manes.versions' version '0.24.0'
     id 'io.gitlab.arturbosch.detekt' version '1.0.1'
 }
 
