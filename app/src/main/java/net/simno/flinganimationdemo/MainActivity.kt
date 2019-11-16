@@ -14,22 +14,21 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.jakewharton.rxbinding3.widget.changes
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotlinx.android.synthetic.main.activity_main.circleView
-import kotlinx.android.synthetic.main.activity_main.frictionSeekBar
-import kotlinx.android.synthetic.main.activity_main.frictionValue
-import kotlinx.android.synthetic.main.activity_main.xValue
-import kotlinx.android.synthetic.main.activity_main.yValue
 import net.simno.flinganimationdemo.CircleView.Companion.MAX_FRICTION
+import net.simno.flinganimationdemo.databinding.MainActivityBinding
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
+    private val binding: MainActivityBinding by lazy {
+        MainActivityBinding.inflate(layoutInflater)
+    }
     private val onError: (Throwable) -> Unit = { Log.e(TAG, it.message, it) }
     private var disposables: CompositeDisposable? = null
     private var position = PointF(0.5f, 0.5f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
     }
 
     override fun onStart() {
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         if (savedInstanceState.containsKey(POSITION_KEY)) {
             position = savedInstanceState.getParcelable(POSITION_KEY) ?: position
-            circleView.setPosition(position)
+            binding.circleView.setPosition(position)
         }
     }
 
@@ -81,17 +80,17 @@ class MainActivity : AppCompatActivity() {
     private fun observeViews(): CompositeDisposable {
         val disposables = CompositeDisposable()
 
-        disposables += frictionSeekBar.changes()
+        disposables += binding.frictionSeekBar.changes()
             .map { if (it >= 30) MAX_FRICTION else (it + 1) / 10f }
-            .doOnNext { circleView.friction = it }
+            .doOnNext { binding.circleView.friction = it }
             .map { if (it == MAX_FRICTION) "∞" else it.toString() }
-            .subscribe({ frictionValue.text = it }, onError)
+            .subscribe({ binding.frictionValue.text = it }, onError)
 
-        disposables += circleView.positions()
+        disposables += binding.circleView.positions()
             .subscribe({
                 position = it
-                xValue.text = it.x.format()
-                yValue.text = it.y.format()
+                binding.xValue.text = it.x.format()
+                binding.yValue.text = it.y.format()
             }, onError)
 
         return disposables

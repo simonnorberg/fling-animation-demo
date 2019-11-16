@@ -18,8 +18,11 @@ android {
         applicationId 'net.simno.flinganimationdemo'
         minSdkVersion versions.min_sdk
         targetSdkVersion versions.target_sdk
-        versionCode 24
-        versionName '1.7'
+        versionCode 25
+        versionName '1.8'
+    }
+    viewBinding {
+        enabled = true
     }
     signingConfigs {
         release {
