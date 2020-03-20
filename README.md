@@ -3,4 +3,4 @@ FlingAnimation Demo [![CircleCI](https://circleci.com/gh/simonnorberg/fling-anim
 
 Demo of using the Android FlingAnimation API together with velocity tracking in a custom view.
 
-https://developer.android.com/reference/android/support/animation/FlingAnimation.html
+https://developer.android.com/reference/kotlin/androidx/dynamicanimation/animation/FlingAnimation

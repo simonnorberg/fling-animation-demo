@@ -13,13 +13,12 @@ play {
 
 android {
     compileSdkVersion versions.compile_sdk
-    buildToolsVersion versions.build_tools
     defaultConfig {
         applicationId 'net.simno.flinganimationdemo'
         minSdkVersion versions.min_sdk
         targetSdkVersion versions.target_sdk
-        versionCode 25
-        versionName '1.8'
+        versionCode 26
+        versionName '1.9'
     }
     viewBinding {
         enabled = true

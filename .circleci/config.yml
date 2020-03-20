@@ -42,7 +42,7 @@ jobs:
           command: ./gradlew bundleRelease assembleRelease
       - run:
           name: Check release
-          command: ./gradlew lintRelease spotlessCheck detekt dependencyUpdates
+          command: ./gradlew spotlessCheck dependencyUpdates
 
       - store_artifacts:
           path: app/build/reports
